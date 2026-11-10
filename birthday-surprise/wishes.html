@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Duas & Warmest Wishes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="p-4 sm:p-6 flex flex-col justify-between">
+
+  <audio id="bgAudio" loop src="music.mp3"></audio>
+
+  <div class="w-full flex justify-between items-center">
+    <span class="text-[11px] font-cinzel text-[#800020]">Graceful Farewell</span>
+    <button id="audioToggleBtn" class="text-[11px] font-cinzel px-3 py-1.5 rounded-full card-burgundy text-[#800020]">
+      Sound: Off
+    </button>
+  </div>
+
+  <div class="max-w-lg w-full mx-auto space-y-4 my-auto">
+    <div class="card-burgundy rounded-3xl p-5 sm:p-7 shadow-lg border border-[#e8bdc5]">
+      <h3 class="font-cinzel text-center text-lg font-bold text-[#550015] mb-4">Wishes & Duas</h3>
+      <p class="text-xs sm:text-[13px] text-[#450212]/90 leading-relaxed font-light whitespace-pre-line text-justify">
+hoyto apni achen apnar  manush tar shathei... ami chai she apnake amar theke beshi adore rakhuk ..ami hoyto jevhabe vhvtyeesi orokom vhabe naw rakhte prtam..kingba hoy to etai hoyto vhagge chilo.. but egula kicchu nah...amar torof theke onnek onnek duwa roilo...life er kono stage e jodi dekha hoy ... tahole hbe.. jotodin allah robbul alamin hayat diyeche beche thako...  shustho thako..ar onnek onnnek onnek happy thako...allah tomar life e baraka dan korok....ei ekdom clean ekta mind niye boltesi..aamr moner vhitor kicchu nei.. so chill .. and sorry for such kinndda thing ..
+      </p>
+    </div>
+
+    <!-- Telegram Feedback Box -->
+    <div class="card-burgundy rounded-2xl p-4 sm:p-5">
+      <label class="block text-xs font-semibold text-[#800020] mb-1">
+        if u have any word then u can let me know ..promise i not gonna reply a single bit.
+      </label>
+      <textarea id="replyMessage" rows="3" placeholder="Write here if you feel like..." class="w-full p-3 rounded-xl bg-white/90 border border-[#e8bdc5] text-xs text-[#800020] outline-none focus:border-[#800020] mb-2"></textarea>
+      
+      <button id="submitBtn" onclick="submitTelegramNote()" class="w-full py-2.5 rounded-xl btn-primary font-cinzel text-xs uppercase tracking-wider flex items-center justify-center gap-1.5">
+        <span>Send</span>
+        <i data-lucide="send" class="w-3.5 h-3.5"></i>
+      </button>
+      <p id="sendAlert" class="hidden text-[11px] text-[#800020] text-center mt-2 font-medium">Message delivered silently.</p>
+    </div>
+  </div>
+
+  <div class="text-center py-2 text-[10px] text-[#800020]/50 tracking-widest font-cinzel uppercase">
+    Stage 5 of 5
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+   function submitTelegramNote() {
+      const text = document.getElementById('replyMessage').value.trim();
+      const btn = document.getElementById('submitBtn');
+
+      btn.disabled = true;
+      btn.innerText = "Sending...";
+
+      const messageContent = text ? `"${text}"` : "(Sent without writing any note)";
+
+      fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CONFIG.chatId,
+          text: `💌 [Direct Message from Website]:\n\n${messageContent}\n\n⏰ Time: ${new Date().toLocaleString()}`
+        })
+      }).finally(() => {
+        window.location.href = "farewell.html";
+      });
+    }
+  </script>
+</body>
+</html>

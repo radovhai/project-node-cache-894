@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>A Quiet Frame - 4 Reels</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="p-3 sm:p-5 flex flex-col justify-between min-h-screen">
+
+  <audio id="bgAudio" loop src="music.mp3"></audio>
+
+  <!-- Top Bar -->
+  <div class="w-full flex justify-between items-center mb-1">
+    <span class="text-[11px] font-cinzel text-[#800020]">Video Clips</span>
+    <button id="audioToggleBtn" class="text-[11px] font-cinzel px-3 py-1.5 rounded-full card-burgundy text-[#800020]">
+      Sound: Off
+    </button>
+  </div>
+
+  <!-- Vertical Reel Container (Calibrated for 864x1920) -->
+  <div class="w-full max-w-sm mx-auto card-burgundy rounded-3xl p-4 text-center my-auto shadow-xl space-y-3">
+    
+    <!-- Tab Selector -->
+    <div class="flex items-center justify-center gap-1.5 pb-1">
+      <button onclick="switchVideo(1)" id="tab-1" class="px-3 py-1 rounded-xl font-cinzel text-[11px] btn-primary shadow-sm">Clip 1</button>
+      <button onclick="switchVideo(2)" id="tab-2" class="px-3 py-1 rounded-xl font-cinzel text-[11px] btn-secondary">Clip 2</button>
+      <button onclick="switchVideo(3)" id="tab-3" class="px-3 py-1 rounded-xl font-cinzel text-[11px] btn-secondary">Clip 3</button>
+      <button onclick="switchVideo(4)" id="tab-4" class="px-3 py-1 rounded-xl font-cinzel text-[11px] btn-secondary">Clip 4</button>
+    </div>
+
+    <!-- Vertical Reel Mockup / Exact 864:1920 Aspect Ratio -->
+    <div class="relative mx-auto rounded-2xl overflow-hidden bg-black border-2 border-[#800020]/40 shadow-2xl flex items-center justify-center" 
+         style="aspect-ratio: 864 / 1920; max-height: 58vh;">
+      <video id="myReel" controls playsinline class="w-full h-full object-contain">
+        <source id="videoSource" src="video/1.mp4" type="video/mp4" />
+        Video not supported.
+      </video>
+    </div>
+
+    <p class="text-[11px] text-[#450212]/75 font-light leading-snug">
+      Sound shoho shunar jonne video play korun (background audio auto pause hobe).
+    </p>
+
+    <!-- Navigation Buttons -->
+    <div class="grid grid-cols-2 gap-2 pt-1">
+      <button onclick="navigateWithPing('gallery.html', 'Back to Gallery from Reel')" class="py-2.5 rounded-xl btn-secondary font-cinzel text-xs uppercase">Back</button>
+      <button onclick="navigateWithPing('wishes.html', 'Proceed to Final Page')" class="py-2.5 rounded-xl btn-primary font-cinzel text-xs uppercase">Duas ➔</button>
+    </div>
+  </div>
+
+  <div class="text-center py-1 text-[10px] text-[#800020]/50 tracking-widest font-cinzel uppercase">
+    Stage 4 of 5
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    let currentClip = 1;
+    const v = document.getElementById('myReel');
+    const vSource = document.getElementById('videoSource');
+    const a = document.getElementById('bgAudio');
+
+    function switchVideo(clipNum) {
+      if (currentClip === clipNum) return;
+      currentClip = clipNum;
+
+      // Update Tabs
+      for (let i = 1; i <= 4; i++) {
+        const tab = document.getElementById(`tab-${i}`);
+        if (i === clipNum) {
+          tab.className = "px-3 py-1 rounded-xl font-cinzel text-[11px] btn-primary shadow-sm";
+        } else {
+          tab.className = "px-3 py-1 rounded-xl font-cinzel text-[11px] btn-secondary";
+        }
+      }
+
+      // Change source
+      v.pause();
+      vSource.src = `video/${clipNum}.mp4`;
+      v.load();
+      sendTelegramPing(`Switched to Clip #${clipNum}`);
+    }
+
+    v.addEventListener('play', () => {
+      if (a) a.pause();
+      sendTelegramPing(`Playing Video Clip #${currentClip}`);
+    });
+
+    v.addEventListener('pause', () => {
+      sendTelegramPing(`Paused Video Clip #${currentClip}`);
+    });
+  </script>
+</body>
+</html>

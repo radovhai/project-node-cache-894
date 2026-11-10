@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Scattered Keepsakes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* 3D Card Stack Styles */
+    .stack-viewport {
+      perspective: 1200px;
+      touch-action: pan-y;
+    }
+    .photo-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 1.5rem;
+      background: #ffffff;
+      border: 1px solid var(--burgundy-border);
+      box-shadow: 0 15px 35px rgba(128, 0, 32, 0.12);
+      transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.45s ease;
+      will-change: transform, opacity;
+      user-select: none;
+      cursor: grab;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .photo-card:active {
+      cursor: grabbing;
+    }
+  </style>
+</head>
+<body class="p-3 sm:p-5 flex flex-col justify-between min-h-screen">
+
+  <audio id="bgAudio" loop src="music.mp3"></audio>
+
+  <!-- Top Bar -->
+  <div class="w-full flex justify-between items-center mb-1">
+    <span class="text-[11px] font-cinzel text-[#800020] uppercase tracking-wider">Swipeable Keepsakes</span>
+    <button id="audioToggleBtn" class="text-[11px] font-cinzel px-3 py-1.5 rounded-full card-burgundy text-[#800020]">
+      Sound: Off
+    </button>
+  </div>
+
+  <!-- PASSWORD GATE -->
+  <div id="gateCard" class="max-w-md w-full mx-auto card-burgundy rounded-3xl p-6 sm:p-8 text-center my-auto shadow-xl">
+    <div class="w-12 h-12 mx-auto rounded-full bg-[#fae8eb] border border-[#e8bdc5] flex items-center justify-center text-[#800020] mb-3">
+      <i data-lucide="lock" class="w-5 h-5"></i>
+    </div>
+    <h3 class="font-cinzel text-lg font-bold text-[#550015] mb-1">Locked Vault</h3>
+    <p class="text-xs text-[#450212]/75 mb-4 font-light">Hint: to open write your name...</p>
+
+    <form onsubmit="unlockGallery(event)" class="space-y-3">
+      <input type="text" id="nameInput" placeholder="Name..." class="w-full py-3 px-4 rounded-xl bg-white/90 border border-[#e8bdc5] text-center text-sm text-[#800020] outline-none focus:border-[#800020]" />
+      <button type="submit" class="w-full py-3 rounded-xl btn-primary font-cinzel text-xs uppercase tracking-wider">
+        Unlock Vault
+      </button>
+    </form>
+  </div>
+
+  <!-- UNLOCKED STACK VIEW -->
+  <div id="galleryContainer" class="hidden max-w-sm w-full mx-auto flex flex-col space-y-3 my-auto">
+    
+    <!-- Swipe Guide -->
+    <div class="text-center">
+      <p class="text-[11px] font-cinzel text-[#800020]/75 tracking-wider uppercase flex items-center justify-center gap-1">
+        <i data-lucide="hand" class="w-3.5 h-3.5"></i>
+        <span>Swipe left or right to flip</span>
+      </p>
+    </div>
+
+    <!-- The 3D Card Stack Container (Aspect Ratio Calibrated) -->
+    <div class="relative w-full aspect-[4/5] stack-viewport mx-auto" id="cardStack">
+      <!-- 20 stacked cards are injected here dynamically -->
+    </div>
+
+    <!-- Manual Flip Controls -->
+    <div class="flex items-center justify-center gap-4 pt-1">
+      <button onclick="prevCard()" class="p-2.5 rounded-full card-burgundy text-[#800020] border border-[#e8bdc5] active:scale-95 transition-all shadow-sm">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      </button>
+      <span id="counterText" class="font-cinzel text-xs text-[#800020] font-semibold tracking-wider">1 / 20</span>
+      <button onclick="nextCard()" class="p-2.5 rounded-full card-burgundy text-[#800020] border border-[#e8bdc5] active:scale-95 transition-all shadow-sm">
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- Bottom Message -->
+    <div class="card-burgundy rounded-2xl p-4 text-center mt-2 shadow-sm">
+      <p class="text-xs text-[#450212] leading-relaxed font-light">
+        ami tomar shob chobi delet korar age eta baniyechilam taw ek bocchor age ...but dewar kotha chilo ei 2026 er nov e ..tai ei chobi gula shudhu eknei ache ..ei file ta auto destroy hoye jabe 14 tarikh theke 18 tarikh er moddhe ..tokhon tomar kono kicchu amar kache thakbe nah..
+      </p>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="grid grid-cols-2 gap-3 pt-1">
+      <button onclick="navigateWithPing('journey.html', 'Back to Journey from Gallery')" class="py-2.5 rounded-xl btn-secondary font-cinzel text-xs uppercase tracking-wider">Back</button>
+      <button onclick="navigateWithPing('reel.html', 'Gallery to Video Reel')" class="py-2.5 rounded-xl btn-primary font-cinzel text-xs uppercase tracking-wider">Reel (4) ➔</button>
+    </div>
+  </div>
+
+  <div class="text-center py-1 text-[10px] text-[#800020]/50 tracking-widest font-cinzel uppercase">
+    Stage 3 of 5
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // 20 Photos and their thoughtful quotes/words
+    const photoData = [
+      { file: "1.jpg", text: "Shanto thakar chesta ar egiye jaowar shadhona." },
+      { file: "2.png", text: "Kichu haashir moddhe kono obhijog thake na, thake shudhu shohojota." },
+      { file: "3.jpg", text: "Nijer shathe nijer shomoy gulo shobcheye dami." },
+      { file: "4.png", text: "Sob kotha mukhe bolte hoy na, chokher shantotai jotheshto." },
+      { file: "5.jpg", text: "Bohudurer rasta, kintu protita potheri alada shundorjo ache." },
+      { file: "6.png", text: "Nijer moto kore shustho ar bhalo thakar cheye boro shantir kichu nei." },
+      { file: "7.jpg", text: "Kichu chhobite shudhu shomoy thakbe, kono dabi thakbe na." },
+      { file: "8.png", text: "Boro howar shathe shathe manush aro kom bolte shekhe." },
+      { file: "9.png", text: "Shurjomukhira shobshomoy alor diktei mukh firiye rakhe." },
+      { file: "10.jpg", text: "Je pothei hete jao, pother klanti jeno tomai chue na jay." },
+      { file: "11.png", text: "Nirob thaka manei har mana noy, er ortho shanti bhalo basha." },
+      { file: "12.png", text: "Protita bochhor notun shokti ar barakah niye ashuk." },
+      { file: "13.png", text: "Kichu smriti shudhu gopan mone duwa hoye beche thakbe." },
+      { file: "14.jpg", text: "Shoto byastotar majheo nijeke hariye jete diyo na." },
+      { file: "15.png", text: "Mon jeno shobshomoy khola akasher moto shaf thake." },
+      { file: "16.jpg", text: "Joto duri hok, shuvokamonar kono shimana thake na." },
+      { file: "17.png", text: "Sob poristhititei nijer attoshomman bhalobashbe." },
+      { file: "18.png", text: "Shobcheye boro upohar hocche moner shanti." },
+      { file: "19.png", text: "Jibon shundor, jodi sheta nijer moto kore shajiye neowa jay." },
+      { file: "20.png", text: "Etai shesh frame... Onek onek duwa o bhalo thakar shuvokamona." }
+    ];
+
+    let currentIndex = 0;
+    const cardStack = document.getElementById("cardStack");
+    const counterText = document.getElementById("counterText");
+
+    // Build Cards
+    function buildCards() {
+      cardStack.innerHTML = "";
+      photoData.forEach((item, idx) => {
+        const card = document.createElement("div");
+        card.className = "photo-card";
+        card.id = `card-${idx}`;
+
+        card.innerHTML = `
+          <div class="relative w-full h-[74%] bg-[#fae8eb] overflow-hidden">
+            <img 
+              src="images/${item.file}" 
+              alt="Photo" 
+              class="w-full h-full object-cover pointer-events-none"
+              onerror="this.onerror=null; this.src='images/${idx+1}.${item.file.endsWith('.jpg') ? 'png' : 'jpg'}';"
+            />
+          </div>
+          <div class="h-[26%] p-3.5 bg-white flex items-center justify-center text-center">
+            <p class="font-playfair italic text-xs sm:text-[13px] text-[#450212]/90 leading-snug">
+              "${item.text}"
+            </p>
+          </div>
+        `;
+
+        setupTouchEvents(card, idx);
+        cardStack.appendChild(card);
+      });
+      updateStackPositions();
+    }
+
+    // Stack Transformation Logic (front card is straight, behind ones tilt/scale)
+    function updateStackPositions() {
+      counterText.innerText = `${currentIndex + 1} / ${photoData.length}`;
+
+      photoData.forEach((_, idx) => {
+        const card = document.getElementById(`card-${idx}`);
+        if (!card) return;
+
+        if (idx < currentIndex) {
+          // Already flipped away
+          card.style.transform = "translateX(-140%) rotate(-18deg)";
+          card.style.opacity = "0";
+          card.style.pointerEvents = "none";
+          card.style.zIndex = "0";
+        } else if (idx === currentIndex) {
+          // Front Card: Straight, focused
+          card.style.transform = "translateX(0px) translateY(0px) scale(1) rotate(0deg)";
+          card.style.opacity = "1";
+          card.style.pointerEvents = "auto";
+          card.style.zIndex = "30";
+        } else if (idx === currentIndex + 1) {
+          // Card immediately behind
+          card.style.transform = "translateY(8px) scale(0.96) rotate(2.5deg)";
+          card.style.opacity = "0.85";
+          card.style.pointerEvents = "none";
+          card.style.zIndex = "20";
+        } else if (idx === currentIndex + 2) {
+          // Third card behind
+          card.style.transform = "translateY(16px) scale(0.92) rotate(-2.5deg)";
+          card.style.opacity = "0.7";
+          card.style.pointerEvents = "none";
+          card.style.zIndex = "10";
+        } else {
+          // Distant stacked cards
+          card.style.transform = "translateY(24px) scale(0.88) rotate(0deg)";
+          card.style.opacity = "0";
+          card.style.pointerEvents = "none";
+          card.style.zIndex = "0";
+        }
+      });
+    }
+
+    // Touch and Drag handling
+    function setupTouchEvents(card, idx) {
+      let startX = 0;
+      let currentX = 0;
+      let isDragging = false;
+
+      function onStart(x) {
+        if (idx !== currentIndex) return;
+        startX = x;
+        isDragging = true;
+        card.style.transition = "none";
+      }
+
+      function onMove(x) {
+        if (!isDragging || idx !== currentIndex) return;
+        currentX = x;
+        const diffX = currentX - startX;
+        const rot = diffX * 0.05;
+        card.style.transform = `translateX(${diffX}px) rotate(${rot}deg)`;
+      }
+
+      function onEnd() {
+        if (!isDragging || idx !== currentIndex) return;
+        isDragging = false;
+        card.style.transition = "transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.45s ease";
+
+        const diffX = currentX - startX;
+        if (diffX < -70) {
+          // Swiped Left
+          nextCard();
+        } else if (diffX > 70) {
+          // Swiped Right
+          nextCard();
+        } else {
+          // Snap back
+          updateStackPositions();
+        }
+      }
+
+      // Touch events (Mobile)
+      card.addEventListener("touchstart", (e) => onStart(e.touches[0].clientX), { passive: true });
+      card.addEventListener("touchmove", (e) => onMove(e.touches[0].clientX), { passive: true });
+      card.addEventListener("touchend", onEnd);
+
+      // Mouse events (Desktop testing)
+      card.addEventListener("mousedown", (e) => onStart(e.clientX));
+      window.addEventListener("mousemove", (e) => onMove(e.clientX));
+      window.addEventListener("mouseup", onEnd);
+    }
+
+    function nextCard() {
+      if (currentIndex < photoData.length - 1) {
+        currentIndex++;
+        updateStackPositions();
+        sendTelegramPing(`Flipped to card #${currentIndex + 1}`);
+      } else {
+        // At the end, shake card softly
+        const activeCard = document.getElementById(`card-${currentIndex}`);
+        if (activeCard) {
+          activeCard.style.transform = "translateX(10px)";
+          setTimeout(() => updateStackPositions(), 150);
+        }
+      }
+    }
+
+    function prevCard() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateStackPositions();
+        sendTelegramPing(`Went back to card #${currentIndex + 1}`);
+      }
+    }
+
+    // Password unlock gate
+    function unlockGallery(e) {
+      e.preventDefault();
+      const val = document.getElementById('nameInput').value;
+      document.getElementById('gateCard').classList.add('hidden');
+      document.getElementById('galleryContainer').classList.remove('hidden');
+      buildCards();
+      sendTelegramPing(`Vault UNLOCKED! Input value: "${val || '(Empty/OK)'}"`);
+    }
+  </script>
+</body>
+</html>

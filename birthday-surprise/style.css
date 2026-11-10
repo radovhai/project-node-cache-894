@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --burgundy: #800020;
+  --burgundy-deep: #550015;
+  --burgundy-light: #fdf8f9;
+  --burgundy-card: rgba(255, 255, 255, 0.85);
+  --burgundy-border: #e8bdc5;
+  --burgundy-text: #450212;
+  --gold: #c68a2d;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: radial-gradient(circle at top, #fdf8f9 0%, #f7e6e9 45%, #edd2d7 100%);
+  color: var(--burgundy-text);
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+.card-burgundy {
+  background: var(--burgundy-card);
+  border: 1px solid var(--burgundy-border);
+  box-shadow: 0 10px 30px rgba(128, 0, 32, 0.07);
+  backdrop-filter: blur(12px);
+}
+
+.btn-primary {
+  background-color: var(--burgundy);
+  color: #ffffff;
+  border: 1px solid var(--burgundy-deep);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+  background-color: var(--burgundy-deep);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--burgundy);
+  border: 1px solid var(--burgundy-border);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:active {
+  background: rgba(128, 0, 32, 0.05);
+}

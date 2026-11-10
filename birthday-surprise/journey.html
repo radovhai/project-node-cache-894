@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>The Distance - Suborna Mustofa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="p-4 sm:p-6 flex flex-col justify-between">
+
+  <audio id="bgAudio" loop src="music.mp3"></audio>
+
+  <div class="w-full flex justify-between items-center">
+    <span class="text-[11px] font-cinzel text-[#800020] uppercase tracking-wider">Suborna Mustofa</span>
+    <button id="audioToggleBtn" class="text-[11px] font-cinzel px-3 py-1.5 rounded-full card-burgundy text-[#800020]">
+      Sound: Off
+    </button>
+  </div>
+
+  <div class="max-w-md w-full mx-auto card-burgundy rounded-3xl p-6 sm:p-8 text-center my-auto space-y-5">
+    <div class="inline-flex p-3 rounded-full bg-[#fae8eb] text-[#c68a2d]">
+      <i data-lucide="sun" class="w-7 h-7"></i>
+    </div>
+
+    <h2 class="font-cinzel text-lg sm:text-xl font-bold text-[#550015]">Sylhet ➔ England</h2>
+
+    <p class="text-xs sm:text-sm text-[#450212]/85 leading-relaxed font-light">
+      Chena shohorer mati theke bohu durer thanda shohor... Notun poribesh, porashona ar nijer shathe juddho kore egiye cholar moddhe ek dhoroner nishobdo shokti thake. Shei porishromer jonne onek shuvokamona.
+    </p>
+
+    <div class="bg-[#fae8eb] rounded-2xl p-4 flex items-center justify-around border border-[#e8bdc5]/50 text-xs text-[#800020]">
+      <div>
+        <p class="font-semibold">Sylhet</p>
+        <span class="text-[10px] opacity-75">Home & Roots</span>
+      </div>
+      <i data-lucide="move-right" class="w-4 h-4 text-[#c68a2d]"></i>
+      <div>
+        <p class="font-semibold">England</p>
+        <span class="text-[10px] opacity-75">New Horizons</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 pt-2">
+      <button onclick="navigateWithPing('index.html', 'Back from Journey to Page 1')" class="py-3 rounded-xl btn-secondary font-cinzel text-xs uppercase tracking-wider">Back</button>
+      <button onclick="navigateWithPing('gallery.html', 'Proceed to Gallery Lock')" class="py-3 rounded-xl btn-primary font-cinzel text-xs uppercase tracking-wider">Vault ➔</button>
+    </div>
+  </div>
+
+  <div class="text-center py-2 text-[10px] text-[#800020]/50 tracking-widest font-cinzel uppercase">
+    Stage 2 of 5
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

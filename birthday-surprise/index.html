@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>A November Note</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="p-4 sm:p-6 flex flex-col justify-between">
+
+  <audio id="bgAudio" loop src="music.mp3"></audio>
+
+  <div class="w-full flex justify-end">
+    <button id="audioToggleBtn" class="text-[11px] font-cinzel px-3 py-1.5 rounded-full card-burgundy text-[#800020] border border-[#e8bdc5]">
+      Sound: Off
+    </button>
+  </div>
+
+  <div class="max-w-md w-full mx-auto card-burgundy rounded-3xl p-6 sm:p-8 text-center my-auto">
+    <div class="w-20 h-20 mx-auto rounded-2xl bg-[#fae8eb] border border-[#800020]/20 flex items-center justify-center text-4xl shadow-inner mb-4 animate-bounce cursor-pointer" onclick="navigateWithPing('journey.html', 'Opened Parcel from Page 1')">
+      🎂
+    </div>
+
+    <span class="text-[11px] font-cinzel text-[#800020] uppercase tracking-widest block mb-1">Confidential Delivery</span>
+    <h1 class="font-cinzel text-xl sm:text-2xl text-[#550015] font-bold mb-3">14 November Parcel</h1>
+
+    <p class="text-xs sm:text-sm text-[#450212]/80 leading-relaxed font-light mb-6">
+      Ei link ta kono formal dabi ba dakar jonne na. Shudhu shanto ekta birthday parcel jeta ei shomoy khular kotha chilo.
+    </p>
+
+    <button onclick="navigateWithPing('journey.html', 'Opened Parcel from Page 1')" class="w-full py-3.5 rounded-2xl btn-primary font-cinzel text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-md">
+      <span>Unwrap Parcel</span>
+      <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </button>
+  </div>
+
+  <div class="text-center py-2 text-[10px] text-[#800020]/50 tracking-widest font-cinzel uppercase">
+    Stage 1 of 5
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      sendTelegramPing("Visited Entrance Page (index.html)");
+    });
+  </script>
+</body>
+</html>
